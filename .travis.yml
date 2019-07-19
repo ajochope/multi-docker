@@ -20,3 +20,4 @@ after_success:
   - docker push ajochope/multi-nginx
   - docker push ajochope/multi-server
   - docker push ajochope/multi-worker
+  

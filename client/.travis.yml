@@ -1,0 +1,24 @@
+sudo: required
+services:
+- docker
+
+before_install:
+  - docker build -t ajochope/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run ajochope/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t ajochope/multi-client ./client
+  - docker build -t ajochope/multi-nginx ./nginx
+  - docker build -t ajochope/multi-server ./server
+  - docker build -t ajochope/multi-worker ./worker
+  # Login on docker hub
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  #push image to docker hub
+  - docker push ajochope/multi-client
+  - docker push ajochope/multi-nginx
+  - docker push ajochope/multi-server
+  - docker push ajochope/multi-worker
+
+  
